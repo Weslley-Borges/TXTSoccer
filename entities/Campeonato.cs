@@ -50,9 +50,37 @@ namespace TXTSoccer.entities
             {
                 j.IniciarJogo();
                 ContabilizarResuiltadoJogo(j);
-
-                HelperPrinter.WaitKey("COMEÇAR O PRÓXIMO JOGO");
             });
+
+
+            int input = Select.Show(this, new List<string> { "Continuar para a tabela", "Ver jogos um por um" });
+            switch (input)
+            {
+                case 0:
+                    break;
+                case 1:
+                    int jogoIdx = 0;
+
+                    while (input != 2)
+                    {
+                        input = Select.Show(
+                            JogosRodada[jogoIdx],
+                            new List<string> { "Proximo jogo", "Jogo anterior", "Ir para a tabela" });
+
+                        switch (input)
+                        {
+                            case 0:
+                                if (jogoIdx < JogosRodada.Count - 1) jogoIdx++;
+                                break;
+                            case 1:
+                                if (jogoIdx != 0) jogoIdx--;
+                                break;
+                            case 2:
+                                break;
+                        }
+                    }
+                    break;
+            }
 
             HelperPrinter.ImprimirTabelaTimesCampeonato(this);
             RodadaAtual++;
@@ -61,7 +89,7 @@ namespace TXTSoccer.entities
         /// <summary>
         /// Contabiliza as pontuações pós-jogo.<br/>
         /// </summary>
-        /// <param name="r"><see cref="ResultadoJogo"/> a ser contabilizado</param>
+        /// <param name="j">Jogo da rodada atual a ser contabilizado</param>
         private void ContabilizarResuiltadoJogo(Jogo j)
         {
             TimeParticipante? mandante = Times.Find(t => t.Time == j.Mandante);
@@ -82,6 +110,12 @@ namespace TXTSoccer.entities
                 mandante.empates++;
                 visitante.empates++;
             }
+
+            mandante.golsFeitos += j.PlacarMandante;
+            mandante.golsTomados += j.PlacarVisitante;
+
+            visitante.golsFeitos += j.PlacarVisitante;
+            visitante.golsTomados += j.PlacarMandante;
         }
     }
 
@@ -92,15 +126,20 @@ namespace TXTSoccer.entities
     {
         public Time Time { get; set; }
         public int vitorias = 0, derrotas = 0, empates = 0;
+        public int golsFeitos = 0, golsTomados = 0;
 
         public TimeParticipante(Time time)
         {
             Time = time;
         }
 
+        /// <summary>
+        /// Recebe a pontuação do time.
+        /// </summary>
+        /// <returns>A pontuacao do <see cref="Time">time</see> no <see cref="Campeonato"/></returns>
         public int GetPontuacao() 
         {
-            int pontos = (vitorias * 2) + empates;
+            int pontos = (vitorias * 2) + empates + (golsFeitos - golsTomados);
             return pontos;
         }
     }

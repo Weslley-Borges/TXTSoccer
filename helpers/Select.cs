@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using TXTSoccer.entities;
+﻿using TXTSoccer.entities;
 
 namespace TXTSoccer.helpers
 {
@@ -15,9 +14,51 @@ namespace TXTSoccer.helpers
             }
         }
 
-        private int GetChoice(List<string> choices)
+        private static Dictionary<ConsoleKey, int> GetChoice(List<string> choices, int choice)
         {
-            return 0;
+            choices.ForEach(c =>
+            {
+                string selector = choices.IndexOf(c) == choice ? "->" : "-";
+                Console.WriteLine($"{selector} {c}");
+            });
+
+            Console.WriteLine("\n[Setas cima e baixo] - Mudar opcao\t[ENTER] - Selecionar opcao");
+
+            var ch = Console.ReadKey(false).Key;
+
+            switch (ch)
+            {
+                case ConsoleKey.UpArrow:
+                    if (choice > 0)
+                        choice -= 1;
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (choice < choices.Count - 1)
+                        choice += 1;
+                    break;
+                case ConsoleKey.Enter:
+                    Console.Clear();
+                    break;
+            }
+
+            Console.Clear();
+            return new Dictionary<ConsoleKey, int> { { ch, choice} };
+        }
+
+        public static int Show(Campeonato c, List<string> choices)
+        {
+            int choice = 0;
+
+            while (true)
+            {
+                HelperPrinter.ImprimirJogosRodada(c);
+
+                Dictionary<ConsoleKey, int> input = GetChoice(choices, choice);
+                choice = input.Values.ToList()[0];
+
+                if (input.Keys.ToList()[0] == ConsoleKey.Enter)
+                    return choice;
+            }
         }
 
         public static int Show(string question, List<string> choices)
@@ -28,37 +69,16 @@ namespace TXTSoccer.helpers
             {
                 Console.WriteLine(question);
 
-                choices.ForEach(c =>
-                {
-                    string selector = choices.IndexOf(c) == choice ? "->" : "-";
-                    Console.WriteLine($"{selector} {c}");
-                });
+                Dictionary<ConsoleKey, int> input = GetChoice(choices, choice);
+                choice = input.Values.ToList()[0];
 
-                Console.WriteLine("\n[Setas cima e baixo] - Mudar opcao\t[ENTER] - Selecionar opcao");
-
-                var ch = Console.ReadKey(false).Key;
-
-                switch (ch)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (choice > 0)
-                            choice -= 1;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        if (choice < choices.Count - 1)
-                            choice += 1;
-                        break;
-                    case ConsoleKey.Enter:
-                        Console.Clear();
-                        return choice;
-                }
-
-                Console.Clear();
+                if (input.Keys.ToList()[0] == ConsoleKey.Enter)
+                    return choice;
             }
         }
 
 
-        public int Show(Time t, List<string> choices)
+        public static int Show(Time t, List<string> choices)
         {
             int choice = 0;
 
@@ -66,32 +86,28 @@ namespace TXTSoccer.helpers
             {
                 HelperPrinter.ImprimirJogadores(t);
 
-                choices.ForEach(c =>
-                {
-                    string selector = choices.IndexOf(c) == choice ? "->" : "-";
-                    Console.WriteLine($"{selector} {c}");
-                });
+                Dictionary<ConsoleKey, int> input = GetChoice(choices, choice);
+                choice = input.Values.ToList()[0];
 
-                Console.WriteLine("[Setas cima e baixo] - Mudar opcao\t[ENTER] - Selecionar opcao");
+                if (input.Keys.ToList()[0] == ConsoleKey.Enter)
+                    return choice;
+            }
+        }
 
-                var ch = Console.ReadKey(false).Key;
+        public static int Show(Jogo j, List<string> choices)
+        {
+            int choice = 0;
 
-                switch (ch)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (choice > 0)
-                            choice -= 1;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        if (choice < choices.Count - 1)
-                            choice += 1;
-                        break;
-                    case ConsoleKey.Enter:
-                        Console.Clear();
-                        return choice;
-                }
+            while (true)
+            {
+                HelperPrinter.ImprimirJogadores(j.Mandante.Nome, j.EscalacaoMandante);
+                HelperPrinter.ImprimirJogadores(j.Visitante.Nome, j.EscalacaoVisitante);
 
-                Console.Clear();
+                Dictionary<ConsoleKey, int> input = GetChoice(choices, choice);
+                choice = input.Values.ToList()[0];
+
+                if (input.Keys.ToList()[0] == ConsoleKey.Enter)
+                    return choice;
             }
         }
     }

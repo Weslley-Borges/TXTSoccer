@@ -79,18 +79,28 @@ namespace TXTSoccer.helpers
             tbl.Print();
         }
 
+        public static void ImprimirJogosRodada(Campeonato c)
+        {
+            Console.WriteLine($"{c.Name} - Rodada {c.RodadaAtual}/{c.Rodadas}");
+
+            Table tbl = new("Time Mandante", "Gols", "X", "Gols", "Time Visitante");
+
+            c.JogosRodada.ForEach(j => tbl.AddRow(j.Mandante.Nome, j.PlacarMandante, "X", j.PlacarVisitante, j.Visitante.Nome));
+            tbl.Print();
+        }
+
         public static void ImprimirTabelaTimesCampeonato(Campeonato c)
         {
             Console.WriteLine($"{c.Name} - Rodada {c.RodadaAtual}/{c.Rodadas}");
 
             c.Times.Sort((x, y) => y.GetPontuacao().CompareTo(x.GetPontuacao()));
 
-            Table tbl = new("Posicao", "Nome do Time", "Derrotas", "Empates", "Vitorias", "Pontos");
+            Table tbl = new("Posicao", "Nome do Time","Saldo de gols", "Derrotas", "Empates", "Vitorias", "Pontos");
 
             for (int i=0; i < c.Times.Count; i++)
             {
                 TimeParticipante t = c.Times[i];
-                tbl.AddRow(i + 1, t.Time.Nome, t.derrotas, t.empates, t.vitorias, t.GetPontuacao());
+                tbl.AddRow(i + 1, t.Time.Nome, t.golsFeitos - t.golsTomados, t.derrotas, t.empates, t.vitorias, t.GetPontuacao());
             }
 
             tbl.Print();

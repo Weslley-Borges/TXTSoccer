@@ -30,7 +30,7 @@ namespace TXTSoccer.helpers
             new ("Panthers"),
             new ("Supercampeoes"),
             new ("Los Revisionistas"),
-            new ("Tropa do pau medio"),
+            new ("Tropa do Calvo"),
             new ("Os Perna-Bamba"),
             new ("Cabeca pesada")
         };

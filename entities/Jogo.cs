@@ -27,15 +27,10 @@ namespace TXTSoccer.entities
 
         public void IniciarJogo()
         {
-            HelperPrinter.ImprimirJogadores(Mandante.Nome, EscalacaoMandante);
-            HelperPrinter.ImprimirJogadores(Visitante.Nome, EscalacaoVisitante);
-
             GerarLesoes();
             GerarCartoes();
             GerarResultado();
             permitirTreinamento();
-
-            ShowResultado();
         }
 
         private void GerarLesoes()
@@ -112,11 +107,6 @@ namespace TXTSoccer.entities
 
                 return somatorioQualidades;
             }
-        }
-
-        private void ShowResultado()
-        {
-            Console.WriteLine($"\n{Mandante.Nome} {PlacarMandante} x {PlacarVisitante} {Visitante.Nome}");
         }
     }
 }

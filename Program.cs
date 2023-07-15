@@ -15,7 +15,7 @@ namespace TXTSoccer
             Random rnd = new();
 
             int r = Select.Show(
-                "---------------- TXTSoccer  v1.0 ----------------\n", 
+                "---------------- TXTSoccer  v1.1.0 ----------------\n", 
                 new List<string>{"Iniciar com times pre-definidos", "Iniciar com times criados."});
 
             if (r == 0)
@@ -25,11 +25,11 @@ namespace TXTSoccer
 
             CadastraJogadores();
 
-            r = 0;
+
             int timeIdx = 0;
-            while (r != 2)
+            while (true)
             {
-                r = new Select().Show(times[timeIdx],
+                int input = Select.Show(times[timeIdx],
                     new List<string> { "Proximo time", "Time anterior", "Começar o campeonato"});
 
                 switch (r)
@@ -43,6 +43,9 @@ namespace TXTSoccer
                     case 2:
                         break;
                 }
+
+                if (input == 2)
+                    break;
             }
 
             Campeonato c = new("Campeonato dos Pe-de-moleque", 100000, times, 10);

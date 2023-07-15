@@ -4,20 +4,22 @@ namespace TXTSoccer.entities
 {
     internal class Time
     {
-        private readonly string nome;
-        private List<Jogador> plantel = new();
+        public string Nome { get; }
+        internal List<Jogador> Plantel { get; set; } = new();
 
         public Time(string nome)
         {
-            this.nome = nome;
+            if (nome is null)
+                throw new ArgumentException("Parameter cannot be null", nameof(nome));
+
+            Nome = nome;
         }
 
         /// <summary>
-        /// Faz a escalação do time. <br/>
-        /// Usa o <see cref="plantel"/> do time devolve uma lista com 11 titulares e 7 reservas.
+        /// Faz a escalação do time.<br/>
+        /// Usa o <see cref="Plantel"/> do time devolve uma lista com 11 titulares e 7 reservas.
         /// </summary>
         /// <returns>Lista de <see cref="Jogador"> titulares e reservas.</returns>
-        /// <remarks></remarks>
         public List<Jogador> EscalarJogadores()
         {
             Dictionary<Posicao, int> formacao = HelperDataHolder.Instance.formacao;
@@ -51,13 +53,9 @@ namespace TXTSoccer.entities
             }
 
             // Preencher as vagas dos reservas
-            selecionados.AddRange(disponivel.Count >= 7 ? disponivel.GetRange(0, 6) : disponivel);
+            selecionados.AddRange(disponivel.Count >= 7 ? disponivel.GetRange(0, 8) : disponivel);
 
             return selecionados;
         }
-
-        // Getters e Setters
-        public string Nome { get => nome; }
-        internal List<Jogador> Plantel { get => plantel; set => plantel = value; }
     }
 }
