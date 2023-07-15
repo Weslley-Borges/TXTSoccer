@@ -19,25 +19,9 @@ namespace TXTSoccer
                 new List<string>{"Iniciar com times pre-definidos", "Iniciar com times criados."});
 
             if (r == 0)
-            {
-                times.Add(new("Real Marola"));
-                times.Add(new("Los Cucos"));
-                times.Add(new("Xilindro"));
-                times.Add(new("Zaparov"));
-                times.Add(new("Atletico MG"));
-                times.Add(new("Gremio"));
-                times.Add(new("Bahia"));
-                times.Add(new("Vitoria"));
-                times.Add(new("Panthers"));
-                times.Add(new("Supercampeoes"));
-                times.Add(new("Los Revisionistas"));
-                times.Add(new("Tropa do pau medio"));
-                times.Add(new("Os Perna-Bamba"));
-                times.Add(new("Cabeca pesada"));
-            } else
-            {
+                times = HelperDataHolder.Instance.times;
+            else
                 times = GerarTimes();
-            }
 
             CadastraJogadores();
 

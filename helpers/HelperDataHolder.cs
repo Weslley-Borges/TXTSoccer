@@ -1,4 +1,6 @@
-﻿namespace TXTSoccer.helpers
+﻿using TXTSoccer.entities;
+
+namespace TXTSoccer.helpers
 {
     internal class Posicao
     {
@@ -15,6 +17,24 @@
     internal sealed class HelperDataHolder
     {
         public static HelperDataHolder? instance = null;
+        public List<Time> times = new() 
+        {
+            new("Real Marola"),
+            new ("Los Cucos"),
+            new ("Xilindro"),
+            new ("Zaparov"),
+            new ("Atletico MG"),
+            new ("Gremio"),
+            new ("Bahia"),
+            new ("Vitoria"),
+            new ("Panthers"),
+            new ("Supercampeoes"),
+            new ("Los Revisionistas"),
+            new ("Tropa do pau medio"),
+            new ("Os Perna-Bamba"),
+            new ("Cabeca pesada")
+        };
+
         public Dictionary<Posicao, int> formacao = new()
         {
             {new Posicao("Atacante", "AT"), 3 },

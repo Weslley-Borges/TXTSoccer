@@ -124,7 +124,7 @@ namespace TXTSoccer.helpers
         public void AddRow(params object[] values)
         {
             if (values == null)
-                throw new System.ArgumentException("Parameter cannot be null", "values");
+                throw new ArgumentException("Parameter cannot be null", "values");
 
             if (values.Length != _Columns.Count)
                 throw new Exception("The number of values in row does not match columns count.");

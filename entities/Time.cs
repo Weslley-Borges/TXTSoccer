@@ -1,4 +1,6 @@
-﻿namespace TXTSoccer.entities
+﻿using TXTSoccer.helpers;
+
+namespace TXTSoccer.entities
 {
     internal class Time
     {
@@ -11,28 +13,25 @@
         }
 
         /// <summary>
-        /// Faz a escalação do time. Usa o <see cref="plantel"/> do time devolve uma lista com 11 titulares e 7 reservas.
+        /// Faz a escalação do time. <br/>
+        /// Usa o <see cref="plantel"/> do time devolve uma lista com 11 titulares e 7 reservas.
         /// </summary>
         /// <returns>Lista de <see cref="Jogador"> titulares e reservas.</returns>
         /// <remarks></remarks>
         public List<Jogador> EscalarJogadores()
         {
-            Dictionary<string, int> posicao = new()
-            {
-                {"Atacante", 3 }, {"Meio-campo", 2}, { "Zagueiro", 3}, {"Goleiro", 1}, {"lateral", 2}
-            };
-
+            Dictionary<Posicao, int> formacao = HelperDataHolder.Instance.formacao;
             List<Jogador> disponivel = new(Plantel);
             List<Jogador> selecionados = new();
 
             // Seleciona os titulares de acordo com a quantidade de jogadores em cada posição
             // Compara os jogadores com posições iguais (ordem decrescente).
-            posicao.Keys.ToList().ForEach(p =>
+            formacao.Keys.ToList().ForEach(p =>
             {
-                List<Jogador> jogadoresDaPosicao = new(disponivel.FindAll(j => (j.Posicao.Nome == p)));
+                List<Jogador> jogadoresDaPosicao = new(disponivel.FindAll(j => (j.Posicao == p)));
                 jogadoresDaPosicao.Sort((x, y) => y.Qualidade.CompareTo(x.Qualidade));
 
-                for (int i = 0; i <= posicao.GetValueOrDefault(p) && i < jogadoresDaPosicao.Count; i++)
+                for (int i = 0; i <= formacao.GetValueOrDefault(p) && i < jogadoresDaPosicao.Count; i++)
                 {
                     selecionados.Add(jogadoresDaPosicao[i]);
                     disponivel.Remove(jogadoresDaPosicao[i]);
