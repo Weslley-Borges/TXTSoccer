@@ -8,16 +8,14 @@ namespace TXTSoccer.entities
         public Time Visitante { get; }
         public int PlacarMandante { get; set; }
         public int PlacarVisitante { get; set; }
-        public DateOnly DataDoJogo { get; }
 
         public List<Jogador> EscalacaoMandante { get; }
         public List<Jogador> EscalacaoVisitante { get; }
 
-        public Jogo(DateOnly dataDoJogo,Time mandante, Time visitante)
+        public Jogo(Time mandante, Time visitante)
         {
             Mandante = mandante;
             Visitante = visitante;
-            DataDoJogo = dataDoJogo;
             PlacarMandante = 0;
             PlacarVisitante = 0;
 

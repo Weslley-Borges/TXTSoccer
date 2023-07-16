@@ -3,213 +3,219 @@ using System.Text;
 
 namespace TXTSoccer.helpers
 {
-    /// <summary>
-    /// Uma classe para controlar a forma como as informações serão mostradas no terminal
-    /// </summary>
-    internal class HelperPrinter
-    {
-        public static HelperPrinter? instance = null;
+	/// <summary>
+	/// Uma classe para controlar a forma como as informações serão mostradas no terminal
+	/// </summary>
+	internal class HelperPrinter
+	{
+		public static HelperPrinter? instance = null;
 
-        public static HelperPrinter Instance
-        {
-            get
-            {
-                instance ??= new HelperPrinter();
-                return instance;
-            }
-        }
+		public static HelperPrinter Instance
+		{
+			get
+			{
+				instance ??= new HelperPrinter();
+				return instance;
+			}
+		}
 
-        /// <summary>
-        /// Mostra uma mensagem enquanto espera o usuário apertar a tecla ENTER
-        /// </summary>
-        /// <param name="message">A mensagem mostrada no terminal</param>
-        public static void WaitKey(string message)
-        {
-            Console.WriteLine($"\n\n[!] APERTE ENTER PARA {message}");
+		/// <summary>
+		/// Mostra uma mensagem enquanto espera o usuário apertar a tecla ENTER
+		/// </summary>
+		/// <param name="message">A mensagem mostrada no terminal</param>
+		public static void WaitKey(string message)
+		{
+			Console.WriteLine($"\n\n[!] APERTE ENTER PARA {message}");
 
-            while (true)
-            {
-                var ch = Console.ReadKey(false).Key;
+			while (true)
+			{
+				var ch = Console.ReadKey(false).Key;
 
-                if (ch == ConsoleKey.Enter)
-                {
-                    Console.Clear();
-                    return;
-                }
-            }
-        }
+				if (ch == ConsoleKey.Enter)
+				{
+					Console.Clear();
+					return;
+				}
+			}
+		}
 
-        /// <summary>
-        /// Imprime uma tabela dos <see cref="Jogador">jogadores</see> de um <see cref="Time"/>.
-        /// </summary>
-        /// <param name="t">O <see cref="Time"/> do qual serão usados os jogadores</param>
-        public static void ImprimirJogadores(Time t)
-        {
-            Console.WriteLine($"\n\nJOGADORES REGISTRADOS - {t.Nome}");
+		/// <summary>
+		/// Imprime uma tabela dos <see cref="Jogador">jogadores</see> de um <see cref="Time"/>.
+		/// </summary>
+		/// <param name="t">O <see cref="Time"/> do qual serão usados os jogadores</param>
+		public static void ImprimirJogadores(Time t)
+		{
+			Console.WriteLine($"\n\nJOGADORES REGISTRADOS - {t.Nome}");
 
-            Table tbl = new("Nome", "Apelido", "Numero", "Posicao", "Data de nascimento", "Condicao", "Qualidade");
+			Table tbl = new("Nome", "Apelido", "Numero", "Posicao", "Data de nascimento", "Condicao", "Qualidade");
 
-            t.Plantel.ForEach(j =>
-            {
-                string status = j.VerificarCondicaoDeJogo() == true ? "SUSPENSO" : "TA PRA JOGO";
+			t.Plantel.ForEach(j =>
+			{
+				string status = j.VerificarCondicaoDeJogo() == true ? "SUSPENSO" : "TA PRA JOGO";
 
-                tbl.AddRow(
-                    j.Nome, j.Apelido, j.Numero, j.Posicao.Nome,
-                    $"{j.DataNascimento.Day}/{j.DataNascimento.Month}/{j.DataNascimento.Year}",
-                    status, j.Qualidade
-                    );
-            });
+				tbl.AddRow(
+					j.Nome, j.Apelido, j.Numero, j.Posicao.Nome,
+					$"{j.DataNascimento.Day}/{j.DataNascimento.Month}/{j.DataNascimento.Year}",
+					status, j.Qualidade
+					);
+			});
 
-            tbl.Print();
-        }
+			tbl.Print();
+		}
 
-        public static void ImprimirJogadores(string nomeTime, List<Jogador> escalacao)
-        {
-            Console.WriteLine($"\n\nESCALACAO - {nomeTime}");
+		public static void ImprimirJogadores(string nomeTime, List<Jogador> escalacao)
+		{
+			Console.WriteLine($"\n\nESCALACAO - {nomeTime}");
 
-            Table tbl = new("Nome", "Apelido", "Numero", "Posicao", "Qualidade", "Status");
+			Table tbl = new("Nome", "Apelido", "Numero", "Posicao", "Qualidade", "Status");
 
-            escalacao.ForEach(j =>
-            {
-                string reserva = escalacao.IndexOf(j) < 11 ? "TITULAR" : "RESERVA";
-                tbl.AddRow(j.Nome, j.Apelido, j.Numero, j.Posicao.Nome, j.Qualidade, reserva);
+			escalacao.ForEach(j =>
+			{
+				string reserva = escalacao.IndexOf(j) < 11 ? "TITULAR" : "RESERVA";
+				tbl.AddRow(j.Nome, j.Apelido, j.Numero, j.Posicao.Nome, j.Qualidade, reserva);
 
-            });
+			});
 
-            tbl.Print();
-        }
+			tbl.Print();
+		}
 
-        public static void ImprimirJogosRodada(Campeonato c)
-        {
-            Console.WriteLine($"{c.Name} - Rodada {c.RodadaAtual}/{c.Rodadas}");
+		public static void ImprimirJogosRodada(Campeonato c, Serie s)
+		{
+			Console.WriteLine($"{c.Name} ({s.Name}) - Rodada {c.RodadaAtual}/{c.Rodadas}");
 
-            Table tbl = new("Time Mandante", "Gols", "X", "Gols", "Time Visitante");
+			Table tbl = new("Time Mandante", "Gols", "X", "Gols", "Time Visitante");
 
-            c.JogosRodada.ForEach(j => tbl.AddRow(j.Mandante.Nome, j.PlacarMandante, "X", j.PlacarVisitante, j.Visitante.Nome));
-            tbl.Print();
-        }
+			s.JogosRodada.ForEach(j => tbl.AddRow(j.Mandante.Nome, j.PlacarMandante, "X", j.PlacarVisitante, j.Visitante.Nome));
+			tbl.Print();
+		}
 
-        public static void ImprimirTabelaTimesCampeonato(Campeonato c)
-        {
-            Console.WriteLine($"{c.Name} - Rodada {c.RodadaAtual}/{c.Rodadas}");
+		public static void ImprimirTabelaTimesCampeonato(Campeonato c)
+		{
+			Console.WriteLine($"{c.Name} - Rodada {c.RodadaAtual}/{c.Rodadas}");
 
-            c.Times.Sort((x, y) => y.GetPontuacao().CompareTo(x.GetPontuacao()));
+			c.Series.ForEach(s =>
+			{
+				s.Times.Sort((x, y) => y.GetPontuacao().CompareTo(x.GetPontuacao()));
 
-            Table tbl = new("Posicao", "Nome do Time","Saldo de gols", "Derrotas", "Empates", "Vitorias", "Pontos");
+                Table tbl = new("Posicao", "Nome do Time", "Saldo de gols", "Derrotas", "Empates", "Vitorias", "Pontos");
 
-            for (int i=0; i < c.Times.Count; i++)
-            {
-                TimeParticipante t = c.Times[i];
-                tbl.AddRow(i + 1, t.Time.Nome, t.golsFeitos - t.golsTomados, t.derrotas, t.empates, t.vitorias, t.GetPontuacao());
-            }
+				for (int i = 0; i < s.Times.Count; i++)
+				{
+					TimeParticipante t = s.Times[i];
+					tbl.AddRow(i + 1, t.Time.Nome, t.golsFeitos - t.golsTomados, t.derrotas, t.empates, t.vitorias, t.GetPontuacao());
+				}
 
-            tbl.Print();
+				Console.WriteLine($"{s.Name}");
+				tbl.Print();
+			});
 
-            if (c.RodadaAtual == c.Rodadas)
-            {
-                Console.WriteLine($"\n\n[!] O time {c.Times[0].Time.Nome} venceu o campeonato!");
-                WaitKey("FINALIZAR O PROGRAMA");
-            }
-            else WaitKey("COMECAR A PROXIMA RODADA");
-        }
-    }
+			c.Series.ForEach(s =>
+			{
+				if (c.RodadaAtual == c.Rodadas)
+					Console.WriteLine($"\n\n[!] O time {s.Times[0].Time.Nome} venceu a {s.Name} do {c.Name}!");
+			});
 
-    // Créditos: https://genert.org/blog/csharp-programming/
-    // Fiz algumas alterações, para a tabela ficar mais minimalista
-    internal class Table
-    {
-        private List<object> _Columns { get; set; }
-        private List<object[]> _Rows { get; set; }
+			WaitKey("CONTINUAR");
 
-        public Table(params string[] columns)
-        {
+		}
+	}
 
-            if (columns == null || columns.Length == 0)
-                throw new ArgumentException("Parameter cannot be null nor empty", "columns");
+	// Créditos: https://genert.org/blog/csharp-programming/
+	// Fiz algumas alterações, para a tabela ficar mais minimalista
+	internal class Table
+	{
+		private List<object> _Columns { get; set; }
+		private List<object[]> _Rows { get; set; }
 
-            _Columns = new List<object>(columns);
-            _Rows = new List<object[]>();
-        }
+		public Table(params string[] columns)
+		{
 
-        public void AddRow(params object[] values)
-        {
-            if (values == null)
-                throw new ArgumentException("Parameter cannot be null", "values");
+			if (columns == null || columns.Length == 0)
+				throw new ArgumentException("Parameter cannot be null nor empty", "columns");
 
-            if (values.Length != _Columns.Count)
-                throw new Exception("The number of values in row does not match columns count.");
+			_Columns = new List<object>(columns);
+			_Rows = new List<object[]>();
+		}
 
-            _Rows.Add(values);
-        }
+		public void AddRow(params object[] values)
+		{
+			if (values == null)
+				throw new ArgumentException("Parameter cannot be null", "values");
 
-        public override string ToString()
-        {
-            StringBuilder tableString = new StringBuilder();
-            List<int> columnsLength = GetColumnsMaximumStringLengths();
+			if (values.Length != _Columns.Count)
+				throw new Exception("The number of values in row does not match columns count.");
 
-            var rowStringFormat = Enumerable
-                .Range(0, _Columns.Count)
-                .Select(i => " | {" + i + ",-" + columnsLength[i] + "}")
-                .Aggregate((total, nextValue) => total + nextValue) + " |";
+			_Rows.Add(values);
+		}
 
-            string columnHeaders = string.Format(rowStringFormat, _Columns.ToArray());
-            List<string> results = _Rows.Select(row => string.Format(rowStringFormat, row)).ToList();
+		public override string ToString()
+		{
+			StringBuilder tableString = new StringBuilder();
+			List<int> columnsLength = GetColumnsMaximumStringLengths();
 
-            int maximumRowLength = Math.Max(0, _Rows.Any() ? _Rows.Max(row => string.Format(rowStringFormat, row).Length) : 0);
-            int maximumLineLength = Math.Max(maximumRowLength, columnHeaders.Length);
+			var rowStringFormat = Enumerable
+				.Range(0, _Columns.Count)
+				.Select(i => " | {" + i + ",-" + columnsLength[i] + "}")
+				.Aggregate((total, nextValue) => total + nextValue) + " |";
 
-            string dividerLine = string.Join("", Enumerable.Repeat("—", maximumLineLength - 1));
-            string divider = $" {dividerLine} ";
+			string columnHeaders = string.Format(rowStringFormat, _Columns.ToArray());
+			List<string> results = _Rows.Select(row => string.Format(rowStringFormat, row)).ToList();
 
-            tableString.AppendLine(divider);
-            tableString.AppendLine(columnHeaders);
-            tableString.AppendLine(divider);
+			int maximumRowLength = Math.Max(0, _Rows.Any() ? _Rows.Max(row => string.Format(rowStringFormat, row).Length) : 0);
+			int maximumLineLength = Math.Max(maximumRowLength, columnHeaders.Length);
 
+			string dividerLine = string.Join("", Enumerable.Repeat("—", maximumLineLength - 1));
+			string divider = $" {dividerLine} ";
 
-            foreach (var row in results)
-                tableString.AppendLine(row);
-
-            tableString.AppendLine(divider);
-
-            return tableString.ToString();
-        }
-
-        public void Print()
-        {
-            Console.WriteLine(ToString());
-        }
+			tableString.AppendLine(divider);
+			tableString.AppendLine(columnHeaders);
+			tableString.AppendLine(divider);
 
 
-        private List<int> GetColumnsMaximumStringLengths()
-        {
-            List<int> columnsLength = new List<int>();
+			foreach (var row in results)
+				tableString.AppendLine(row);
 
-            for (int i = 0; i < _Columns.Count; i++)
-            {
-                List<object> columnRow = new List<object>();
-                int max = 0;
+			tableString.AppendLine(divider);
 
-                columnRow.Add(_Columns[i]);
+			return tableString.ToString();
+		}
 
-                for (int j = 0; j < _Rows.Count; j++)
-                {
-                    columnRow.Add(_Rows[j][i]);
-                }
+		public void Print()
+		{
+			Console.WriteLine(ToString());
+		}
 
-                for (int n = 0; n < columnRow.Count; n++)
-                {
-                    int len = columnRow[n].ToString().Length;
 
-                    if (len > max)
-                    {
-                        max = len;
-                    }
-                }
+		private List<int> GetColumnsMaximumStringLengths()
+		{
+			List<int> columnsLength = new List<int>();
 
-                columnsLength.Add(max);
-            }
+			for (int i = 0; i < _Columns.Count; i++)
+			{
+				List<object> columnRow = new List<object>();
+				int max = 0;
 
-            return columnsLength;
-        }
-    }
+				columnRow.Add(_Columns[i]);
+
+				for (int j = 0; j < _Rows.Count; j++)
+				{
+					columnRow.Add(_Rows[j][i]);
+				}
+
+				for (int n = 0; n < columnRow.Count; n++)
+				{
+					int len = columnRow[n].ToString().Length;
+
+					if (len > max)
+					{
+						max = len;
+					}
+				}
+
+				columnsLength.Add(max);
+			}
+
+			return columnsLength;
+		}
+	}
 }

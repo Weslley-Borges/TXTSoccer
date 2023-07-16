@@ -3,130 +3,74 @@ using TXTSoccer.helpers;
 
 namespace TXTSoccer
 {
-    class Program
-    {
-        static readonly HelperDataHolder data = new();
-        static readonly int qtdCadastrados = 25;
-        static readonly Random rnd = new();
-        static List<Time> times = new();
+	class Program
+	{
+		static readonly HelperDataHolder data = new();
+		static readonly Random rnd = new();
 
-        public static void Main(string[] args)
-        {
-            Random rnd = new();
+		public static void Main(string[] args)
+		{
+			Random rnd = new();
 
-            int r = Select.Show(
-                "---------------- TXTSoccer  v1.1.0 ----------------\n", 
-                new List<string>{"Iniciar com times pre-definidos", "Iniciar com times criados."});
-
-            if (r == 0)
-                times = HelperDataHolder.Instance.times;
-            else
-                times = GerarTimes();
-
-            CadastraJogadores();
+			Console.WriteLine("---------------- TXTSoccer  v1.1.0 ----------------\n");
+			HelperPrinter.WaitKey("COMEÇAR!");
 
 
-            int timeIdx = 0;
-            while (true)
-            {
-                int input = Select.Show(times[timeIdx],
-                    new List<string> { "Proximo time", "Time anterior", "Começar o campeonato"});
+			Campeonato c = new("Campeonato dos Pe-de-moleque", 10);
+			c.Series.Add(new("Serie A", 1000000));
+			c.Series.Add(new("Serie B", 500000));
+			c.Series.Add(new("Serie C", 250000));
 
-                switch (r)
-                {
-                    case 0:
-                        if (timeIdx < times.Count - 1) timeIdx++;
-                        break;
-                    case 1:
-                        if (timeIdx != 0) timeIdx--;
-                        break;
-                    case 2:
-                        break;
+			c.Series.ForEach(s =>
+			{
+				for (int i=0; i < 10; i++)
+				{
+					string nome1 = HelperDataHolder.timesNomes1[rnd.Next(0, HelperDataHolder.timesNomes1.Count - 1)];
+					string nome2 = HelperDataHolder.timesNomes2[rnd.Next(0, HelperDataHolder.timesNomes2.Count - 1)];
+
+                    Time t = new($"{nome1} {nome2}") { Plantel = CadastraJogadores() };
+
+                    s.Times.Add(new TimeParticipante(t));
                 }
+				
+			});
 
-                if (input == 2)
-                    break;
-            }
+			c.Series.ForEach(s => s.ShowRegistroTimes());
+			
 
-            Campeonato c = new("Campeonato dos Pe-de-moleque", 100000, times, 10);
+			while (c.RodadaAtual <= c.Rodadas)
+			{
+				c.DefinirJogosRodada();
+				c.IniciarRodada();
+			}
+		}
 
-            while (c.RodadaAtual <= c.Rodadas)
-            {
-                c.DefinirJogosRodada();
-                c.IniciarRodada();
+		/// <summary>
+		/// Registro dos jogadores em um time
+		/// </summary>
+		/// <returns>O plantel com todos os jogadores daquele time</returns>
+		public static List<Jogador> CadastraJogadores()
+		{
+			int id = 1;
+			List<Jogador> plantel = new();
 
-                c.Times.ForEach(t => t.Time.Plantel.ForEach(j =>
-                {
-                    j.ExecutarTreino();
-                    j.CumprirSuspensao();
-                }));
-            }
-        }
+			for (int j = 0; j < 20; j++)
+			{
 
-        static void CadastraJogadores()
-        {
-            int id = 1;
+				int cartoes = rnd.Next(4);
+				int numero = rnd.Next(100);
+				int qualidade = rnd.Next(100);
+				string nome = data.nomesJogadores[rnd.Next(0, data.nomesJogadores.Count)];
+				string apelido = data.apelidosJogadores[rnd.Next(0, data.apelidosJogadores.Count)];
+				Posicao posicao = data.formacao.Keys.ToList()[rnd.Next(0, data.formacao.Keys.ToList().Count)];
+				DateOnly dataNascimento = new DateOnly(rnd.Next(1980, 2003), rnd.Next(1, 12), rnd.Next(1, 28));
 
-            times.ForEach(t =>
-            {
-                for (int j = 0; j < qtdCadastrados; j++)
-                {
+				plantel.Add(new Jogador(id, nome, apelido, posicao, numero, qualidade, cartoes, dataNascimento));
 
-                    int cartoes = rnd.Next(4);
-                    int numero = rnd.Next(100);
-                    int qualidade = rnd.Next(100);
-                    string nome = data.nomesJogadores[rnd.Next(0, data.nomesJogadores.Count)];
-                    string apelido = data.apelidosJogadores[rnd.Next(0, data.apelidosJogadores.Count)];
-                    Posicao posicao = data.formacao.Keys.ToList()[rnd.Next(0, data.formacao.Keys.ToList().Count)];
-                    DateOnly dataNascimento = new DateOnly(rnd.Next(1980, 2003), rnd.Next(1, 12), rnd.Next(1, 28));
+				id++;
+			}
 
-                    t.Plantel.Add(new Jogador(id, nome, apelido, posicao, numero, qualidade, cartoes, dataNascimento));
-
-                    id++;
-                }
-            });
-        }
-
-        private static List<Time> GerarTimes()
-        {
-            int nTimes = 1;
-            List<Time> times = new();
-
-            while (nTimes % 2 != 0)
-            {
-                Console.Write("[?] Digite a quantidade de times (deve ser um numero par): ");
-                string? qtdTimes = Console.ReadLine();
-
-                if (qtdTimes == null || int.Parse(qtdTimes) % 2 != 0)
-                {
-                    PrintException("Input invalido!");
-                    continue;
-                }
-
-                nTimes = int.Parse(qtdTimes);
-            };
-
-            for (int i=0; i < nTimes; i++)
-            {
-                Console.Write($"[?] Digite o nome do {i+1}o time: ");
-                string? nomeTime = Console.ReadLine();
-
-                if (nomeTime == null)
-                {
-                    PrintException("O nome do time nao pode ser nulo");
-                    continue;
-                }
-
-                times.Add(new Time(nomeTime));
-            }
-
-            return times;
-
-            void PrintException(string message)
-            {
-                Console.WriteLine($"[!] {message}");
-                HelperPrinter.WaitKey("TENTAR NOVAMENTE.");
-            }
-        }
-    }
+			return plantel;
+		}
+	}
 }

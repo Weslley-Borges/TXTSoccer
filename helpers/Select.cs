@@ -45,13 +45,29 @@ namespace TXTSoccer.helpers
             return new Dictionary<ConsoleKey, int> { { ch, choice} };
         }
 
-        public static int Show(Campeonato c, List<string> choices)
+        public static int Show(Campeonato c, Serie s, List<string> choices)
         {
             int choice = 0;
 
             while (true)
             {
-                HelperPrinter.ImprimirJogosRodada(c);
+                HelperPrinter.ImprimirJogosRodada(c, s);
+
+                Dictionary<ConsoleKey, int> input = GetChoice(choices, choice);
+                choice = input.Values.ToList()[0];
+
+                if (input.Keys.ToList()[0] == ConsoleKey.Enter)
+                    return choice;
+            }
+        }
+
+        public static int ShowJogosSeries(Campeonato c, List<string> choices)
+        {
+            int choice = 0;
+
+            while (true)
+            {
+                c.Series.ForEach(s => HelperPrinter.ImprimirJogosRodada(c, s));
 
                 Dictionary<ConsoleKey, int> input = GetChoice(choices, choice);
                 choice = input.Values.ToList()[0];
@@ -94,12 +110,14 @@ namespace TXTSoccer.helpers
             }
         }
 
-        public static int Show(Jogo j, List<string> choices)
+        public static int Show(Serie s, Jogo j, List<string> choices)
         {
             int choice = 0;
 
             while (true)
             {
+                Console.WriteLine($"--------------------- {s.Name}");
+
                 HelperPrinter.ImprimirJogadores(j.Mandante.Nome, j.EscalacaoMandante);
                 HelperPrinter.ImprimirJogadores(j.Visitante.Nome, j.EscalacaoVisitante);
 

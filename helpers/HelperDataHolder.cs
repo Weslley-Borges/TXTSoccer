@@ -17,22 +17,17 @@ namespace TXTSoccer.helpers
     internal sealed class HelperDataHolder
     {
         public static HelperDataHolder? instance = null;
-        public List<Time> times = new() 
+
+        public static List<string> timesNomes1 = new()
         {
-            new("Real Marola"),
-            new ("Los Cucos"),
-            new ("Xilindro"),
-            new ("Zaparov"),
-            new ("Atletico MG"),
-            new ("Gremio"),
-            new ("Bahia"),
-            new ("Vitoria"),
-            new ("Panthers"),
-            new ("Supercampeoes"),
-            new ("Los Revisionistas"),
-            new ("Tropa do Calvo"),
-            new ("Os Perna-Bamba"),
-            new ("Cabeca pesada")
+            "Clube", "Pernas", "Gol", "Timao", "Confederacao", "Federacao", 
+            "Uniao", "Atletico", "Os", "Real", "Bayern", "Schultz"
+        };
+
+        public static List<string> timesNomes2 = new()
+        {
+            "Azul","Vermelho", "Verde", "Rubro", "das Palhas", "Golzao", 
+            "Flasco", "Esportiva", "Parangole", "Fiazco", "Londrina", "Bamba", "Krieg"
         };
 
         public Dictionary<Posicao, int> formacao = new()
