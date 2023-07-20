@@ -27,17 +27,24 @@ namespace TXTSoccer.entities
 			Series.ForEach(s => s.DefinirJogosRodada());
 		}
 
-		/// <summary>
-		/// Inicia dos <see cref="Jogo">jogos</see> da rodada atual.<br/>
-		/// </summary>
-		public void IniciarRodada()
+        /// <summary>
+        /// Inicia dos <see cref="Jogo">jogos</see> da rodada atual.<br/>
+		/// Imprime os jogos de todas as séries na rodada atual do campeonato.
+        /// </summary>
+        public void IniciarRodada()
 		{
 			Series.ForEach(s => s.IniciarRodada());
+			List<string> options = new(){ "Ir para a tabela", "Ver jogos" };
 
-			int input = Select.ShowJogosSeries(this, new List<string> { "Ir para a tabela", "Ver jogos" });
+            do
+            {
+                Series.ForEach(s => HelperPrinter.ImprimirJogosRodada(this, s));
+                SelectInput.instance = Select.Instance.GetChoice(options, SelectInput.Instance);
 
-			if (input == 1)
-				Series.ForEach(s => s.ShowJogosRodada());
+            } while (SelectInput.instance.Key != ConsoleKey.Enter);
+
+			if (SelectInput.instance.ChoiceIndex == 1)
+				Series.ForEach(s => s.ShowEscalacao());
 
             HelperPrinter.ImprimirTabelaTimesCampeonato(this);
 

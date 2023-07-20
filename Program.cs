@@ -35,7 +35,7 @@ namespace TXTSoccer
 				
 			});
 
-			c.Series.ForEach(s => s.ShowRegistroTimes());
+			c.Series.ForEach(s => s.ShowJogadoresTime());
 			
 
 			while (c.RodadaAtual <= c.Rodadas)

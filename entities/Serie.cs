@@ -2,7 +2,7 @@
 
 namespace TXTSoccer.entities
 {
-	internal class Serie
+    internal class Serie
 	{
 		public string Name { get; set; }
 		public double Prize { get; set; }
@@ -88,16 +88,30 @@ namespace TXTSoccer.entities
 			visitante.golsTomados += j.PlacarMandante;
 		}
 
-		public void ShowRegistroTimes()
+        /// <summary>
+        /// Imprime a tabela de jogadores de um time
+        /// </summary>
+        /// <param name="t">O <see cref="Time"/></param>
+        /// <param name="options">Lista de opções disponíveis</param>
+        /// <returns>Índice da opção escolhida</returns>
+        public void ShowJogadoresTime()
 		{
 			int timeIdx = 0;
+			List<string> options = new() { "Proximo time", "Time anterior", "Proxima serie" };
 
-			while (true)
+
+            while (true)
 			{
-				int input = Select.Show(Times[timeIdx].Time,
-					new List<string> { "Proximo time", "Time anterior", "Proxima serie" });
+                Time t = Times[timeIdx].Time;
 
-				switch (input)
+                do
+                {
+                    HelperPrinter.ImprimirJogadores(t);
+					SelectInput.instance = Select.Instance.GetChoice(options, SelectInput.Instance);
+
+                } while (SelectInput.Instance.Key != ConsoleKey.Enter);
+
+                switch (SelectInput.Instance.ChoiceIndex)
 				{
 					case 0:
 						if (timeIdx < Times.Count - 1) timeIdx++;
@@ -106,36 +120,49 @@ namespace TXTSoccer.entities
 						if (timeIdx != 0) timeIdx--;
 						break;
 					case 2:
-						break;
+						return;
 				}
-
-				if (input == 2)
-					break;
 			}
 		}
 
-		public void ShowJogosRodada()
+        /// <summary>
+        /// Mostra a escalação do time mandante e do time visitante e um menu de seleção.
+        /// </summary>
+        /// <param name="s">A <see cref="Serie">série</see> a qual o <see cref="Jogo"/> pertence.</param>
+        /// <param name="j">O <see cref="Jogo"/> atual</param>
+        /// <param name="choices">Lista de opções disponíveis.</param>
+        /// <returns>Índice da opção escolhida</returns>
+        public void ShowEscalacao()
 		{
 			int jogoIdx = 0;
-			int input = 0;
+			List<string> options = new() { "Proximo jogo", "Jogo anterior", "Continuar" };
 
-			while (input != 2)
+            while (true)
 			{
-				input = Select.Show(
-					this,JogosRodada[jogoIdx],
-					new List<string> { "Proximo jogo", "Jogo anterior", "Ir para a tabela" 
-					});
+                Jogo j = JogosRodada[jogoIdx];
 
-				switch (input)
+                do
+				{
+					Console.WriteLine($"--------------------- {Name}");
+					HelperPrinter.ImprimirJogadores(j.Mandante.Nome, j.EscalacaoMandante);
+					HelperPrinter.ImprimirJogadores(j.Visitante.Nome, j.EscalacaoVisitante);
+
+					SelectInput.instance = Select.Instance.GetChoice(options, SelectInput.Instance);
+
+				} while (SelectInput.Instance.Key != ConsoleKey.Enter) ;
+
+                switch (SelectInput.Instance.ChoiceIndex)
 				{
 					case 0:
-						if (jogoIdx < JogosRodada.Count - 1) jogoIdx++;
+						if (jogoIdx < JogosRodada.Count - 1)
+							jogoIdx++;
 						break;
 					case 1:
-						if (jogoIdx != 0) jogoIdx--;
+						if (jogoIdx != 0) 
+							jogoIdx--;
 						break;
 					case 2:
-						break;
+						return;
 				}
 			}
 		}
