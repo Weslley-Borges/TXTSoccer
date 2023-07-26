@@ -132,7 +132,7 @@ namespace TXTSoccer.entities
         /// <param name="j">O <see cref="Jogo"/> atual</param>
         /// <param name="choices">Lista de opções disponíveis.</param>
         /// <returns>Índice da opção escolhida</returns>
-        public void ShowEscalacao()
+        public void ShowEscalacaoTimesJogo()
 		{
 			int jogoIdx = 0;
 			List<string> options = new() { "Proximo jogo", "Jogo anterior", "Continuar" };
@@ -147,7 +147,7 @@ namespace TXTSoccer.entities
 					HelperPrinter.ImprimirJogadores(j.Mandante.Nome, j.EscalacaoMandante);
 					HelperPrinter.ImprimirJogadores(j.Visitante.Nome, j.EscalacaoVisitante);
 
-					SelectInput.instance = Select.Instance.GetChoice(options, SelectInput.Instance);
+                    SelectInput.instance = Select.Instance.GetChoice(options, SelectInput.Instance);
 
 				} while (SelectInput.Instance.Key != ConsoleKey.Enter) ;
 

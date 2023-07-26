@@ -4,6 +4,19 @@ namespace TXTSoccer.entities
 {
     internal class Jogador
     {
+        public int Id { get; }
+        public string Nome { get; }
+        public string Apelido { get; }
+        public int Numero { get; set; }
+        public int Cartoes { get; set; }
+        public bool Suspenso { get; set; } = false;
+        public int Qualidade { get; set; }
+        public bool JaTreinou { get; set; }
+        public int JogosSuspenso { get; set; } = 0;
+        public Posicao Posicao { get; }
+        public DateOnly DataNascimento { get; }
+
+
         public Jogador(
             int id, string nome,
             string apelido, Posicao posicao, int numero,
@@ -80,19 +93,5 @@ namespace TXTSoccer.entities
             if (Qualidade > 100) Qualidade = 100;
             JaTreinou = true;
         }
-
-
-        // Getters e Setters
-        public int Id { get; }
-        public string Nome { get; }
-        public string Apelido { get; }
-        public int Numero { get; set; }
-        public int Cartoes { get; set; }
-        public bool Suspenso { get; set; }
-        public int Qualidade { get; set; }
-        public bool JaTreinou { get; set; }
-        public int JogosSuspenso { get; set; } = 0;
-        public Posicao Posicao { get; }
-        public DateOnly DataNascimento { get; }
     }
 }

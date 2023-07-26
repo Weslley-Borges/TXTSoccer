@@ -72,7 +72,9 @@ namespace TXTSoccer.helpers
 			escalacao.ForEach(j =>
 			{
 				string reserva = escalacao.IndexOf(j) < 11 ? "TITULAR" : "RESERVA";
-				tbl.AddRow(j.Nome, j.Apelido, j.Numero, j.Posicao.Nome, j.Qualidade, reserva);
+				string suspenso = j.Suspenso ? "(SUSPENSO)" : "";
+
+				tbl.AddRow(j.Nome, j.Apelido, j.Numero, j.Posicao.Nome, j.Qualidade, $"{reserva} {suspenso}");
 
 			});
 

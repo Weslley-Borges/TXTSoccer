@@ -11,7 +11,6 @@ namespace TXTSoccer.entities
         {
             if (nome is null)
                 throw new ArgumentException("Parameter cannot be null", nameof(nome));
-
             Nome = nome;
         }
 
@@ -23,7 +22,7 @@ namespace TXTSoccer.entities
         public List<Jogador> EscalarJogadores()
         {
             Dictionary<Posicao, int> formacao = HelperDataHolder.Instance.formacao;
-            List<Jogador> disponivel = new(Plantel);
+            List<Jogador> disponivel = new(Plantel.FindAll(j => !j.Suspenso));
             List<Jogador> selecionados = new();
 
             // Seleciona os titulares de acordo com a quantidade de jogadores em cada posição

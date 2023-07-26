@@ -1,7 +1,9 @@
-﻿using TXTSoccer.helpers;
-
-namespace TXTSoccer.entities
+﻿namespace TXTSoccer.entities
 {
+
+    /// <summary>
+    /// Uma classe que realiza os métodos e guarda informações obra partida de uma <see cref="Serie"/>
+    /// </summary>
     internal class Jogo
     {
         public Time Mandante { get; }
@@ -28,14 +30,14 @@ namespace TXTSoccer.entities
             GerarLesoes();
             GerarCartoes();
             GerarResultado();
-            permitirTreinamento();
+            PermitirTreinamento();
         }
 
         private void GerarLesoes()
         {
             List<Jogador> jogadores = new();
-            EscalacaoMandante.ForEach(j => jogadores.Add(j));
-            EscalacaoVisitante.ForEach(j => jogadores.Add(j));
+            jogadores.AddRange(EscalacaoMandante.FindAll(j => EscalacaoMandante.IndexOf(j) < 11));
+            jogadores.AddRange(EscalacaoVisitante.FindAll(j => EscalacaoVisitante.IndexOf(j) < 11));
 
             Random rnd = new();
             int nLesoes = rnd.Next(2);
@@ -50,9 +52,9 @@ namespace TXTSoccer.entities
             List<Jogador> jogadores = new();
             List<Jogador> jogadoresReceberamCartao = new();
 
-            EscalacaoMandante.ForEach(j => jogadores.Add(j));
-            EscalacaoVisitante.ForEach(j => jogadores.Add(j));
-            
+            jogadores.AddRange(EscalacaoMandante.FindAll(j => EscalacaoMandante.IndexOf(j) < 11));
+            jogadores.AddRange(EscalacaoVisitante.FindAll(j => EscalacaoVisitante.IndexOf(j) < 11));
+
             Random rnd = new Random();
             for (int i = 0; i < rnd.Next(0, 10); i++)
             {
@@ -66,7 +68,7 @@ namespace TXTSoccer.entities
             }
         }
 
-        private void permitirTreinamento()
+        private void PermitirTreinamento()
         {
             Mandante.Plantel.ForEach(j => j.JaTreinou = false);
             Visitante.Plantel.ForEach(j => j.JaTreinou = false);
@@ -77,8 +79,11 @@ namespace TXTSoccer.entities
         */
         private void GerarResultado()
         {
-            int nTimeMandante = SomarQualidades(EscalacaoMandante);
-            int nTimeVisitante = SomarQualidades(EscalacaoVisitante);
+            List<Jogador> TimeMandanteSemExpulsoes = new(EscalacaoMandante.FindAll(j => !j.Suspenso));
+            List<Jogador> TimeVisitanteSemExpulsoes = new(EscalacaoVisitante.FindAll(j => !j.Suspenso));
+
+            int nTimeMandante = SomarQualidades(TimeMandanteSemExpulsoes);
+            int nTimeVisitante = SomarQualidades(TimeVisitanteSemExpulsoes);
 
             int diferencaTimes = Math.Abs(nTimeMandante - nTimeVisitante);
             int somaTimes = nTimeMandante + nTimeVisitante;

@@ -44,7 +44,7 @@ namespace TXTSoccer.entities
             } while (SelectInput.instance.Key != ConsoleKey.Enter);
 
 			if (SelectInput.instance.ChoiceIndex == 1)
-				Series.ForEach(s => s.ShowEscalacao());
+				Series.ForEach(s => s.ShowEscalacaoTimesJogo());
 
             HelperPrinter.ImprimirTabelaTimesCampeonato(this);
 
