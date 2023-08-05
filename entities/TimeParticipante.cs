@@ -8,6 +8,7 @@
         public Time Time { get; set; }
         public int vitorias = 0, derrotas = 0, empates = 0;
         public int golsFeitos = 0, golsTomados = 0;
+        public int PosicaoAnterior { get; set; }
 
         public TimeParticipante(Time time)
         {

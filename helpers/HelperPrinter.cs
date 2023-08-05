@@ -97,6 +97,7 @@ namespace TXTSoccer.helpers
 
 			c.Series.ForEach(s =>
 			{
+				s.Times.ForEach(t => t.PosicaoAnterior = s.Times.IndexOf(t) + 1);
 				s.Times.Sort((x, y) => y.GetPontuacao().CompareTo(x.GetPontuacao()));
 
                 Table tbl = new("Posicao", "Nome do Time", "Saldo de gols", "Derrotas", "Empates", "Vitorias", "Pontos");
@@ -104,7 +105,13 @@ namespace TXTSoccer.helpers
 				for (int i = 0; i < s.Times.Count; i++)
 				{
 					TimeParticipante t = s.Times[i];
-					tbl.AddRow(i + 1, t.Time.Nome, t.golsFeitos - t.golsTomados, t.derrotas, t.empates, t.vitorias, t.GetPontuacao());
+					string mudancaPosicao = "";
+
+					if (i + 1 > t.PosicaoAnterior) mudancaPosicao = "V";
+					else if (i + 1 < t.PosicaoAnterior) mudancaPosicao = "^";
+
+
+                    tbl.AddRow(+1, $"{mudancaPosicao} {t.Time.Nome}", t.golsFeitos - t.golsTomados, t.derrotas, t.empates, t.vitorias, t.GetPontuacao());
 				}
 
 				Console.WriteLine($"{s.Name}");
