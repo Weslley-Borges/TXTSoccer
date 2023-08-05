@@ -88,6 +88,11 @@ namespace TXTSoccer.entities
 			visitante.golsTomados += j.PlacarMandante;
 		}
 
+		public void ResetarPontuacoes() 
+		{
+			Times.ForEach(t => t.ResetarPontuacao());
+		}
+
         /// <summary>
         /// Imprime a tabela de jogadores de um time
         /// </summary>

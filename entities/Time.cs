@@ -9,8 +9,6 @@ namespace TXTSoccer.entities
 
         public Time(string nome)
         {
-            if (nome is null)
-                throw new ArgumentException("Parameter cannot be null", nameof(nome));
             Nome = nome;
         }
 
@@ -29,13 +27,16 @@ namespace TXTSoccer.entities
             // Compara os jogadores com posições iguais (ordem decrescente).
             formacao.Keys.ToList().ForEach(p =>
             {
-                List<Jogador> jogadoresDaPosicao = new(disponivel.FindAll(j => (j.Posicao == p)));
+                int counter = 0;
+                List<Jogador> jogadoresDaPosicao = disponivel.FindAll(j => j.Posicao == p);
                 jogadoresDaPosicao.Sort((x, y) => y.Qualidade.CompareTo(x.Qualidade));
 
-                for (int i = 0; i <= formacao.GetValueOrDefault(p) && i < jogadoresDaPosicao.Count; i++)
+                for (int i = 0; counter < formacao.GetValueOrDefault(p) && i < jogadoresDaPosicao.Count; i++)
                 {
                     selecionados.Add(jogadoresDaPosicao[i]);
                     disponivel.Remove(jogadoresDaPosicao[i]);
+
+                    counter++;
                 }
             });
 
@@ -52,7 +53,7 @@ namespace TXTSoccer.entities
             }
 
             // Preencher as vagas dos reservas
-            selecionados.AddRange(disponivel.Count >= 7 ? disponivel.GetRange(0, 8) : disponivel);
+            selecionados.AddRange(disponivel.Count >= 7 ? disponivel.GetRange(0, 7) : disponivel);
 
             return selecionados;
         }

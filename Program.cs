@@ -10,8 +10,6 @@ namespace TXTSoccer
 
 		public static void Main(string[] args)
 		{
-			Random rnd = new();
-
 			Console.WriteLine("---------------- TXTSoccer  v1.1.0 ----------------\n");
 			HelperPrinter.WaitKey("COMEÇAR!");
 
@@ -37,12 +35,16 @@ namespace TXTSoccer
 
 			c.Series.ForEach(s => s.ShowJogadoresTime());
 			
-
-			while (c.RodadaAtual <= c.Rodadas)
+			while (c.TemporadaAtual <= c.Temporadas)
 			{
-				c.DefinirJogosRodada();
-				c.IniciarRodada();
-			}
+                while (c.RodadaAtual <= c.Rodadas)
+                {
+                    c.DefinirJogosRodada();
+                    c.IniciarRodada();
+                }
+
+				c.TerminarTemporada();
+            }
 		}
 
 		/// <summary>
@@ -56,8 +58,6 @@ namespace TXTSoccer
 
 			for (int j = 0; j < 20; j++)
 			{
-
-				int cartoes = rnd.Next(4);
 				int numero = rnd.Next(100);
 				int qualidade = rnd.Next(100);
 				string nome = data.nomesJogadores[rnd.Next(0, data.nomesJogadores.Count)];
@@ -65,7 +65,7 @@ namespace TXTSoccer
 				Posicao posicao = data.formacao.Keys.ToList()[rnd.Next(0, data.formacao.Keys.ToList().Count)];
 				DateOnly dataNascimento = new DateOnly(rnd.Next(1980, 2003), rnd.Next(1, 12), rnd.Next(1, 28));
 
-				plantel.Add(new Jogador(id, nome, apelido, posicao, numero, qualidade, cartoes, dataNascimento));
+				plantel.Add(new Jogador(id, nome, apelido, posicao, numero, qualidade, dataNascimento));
 
 				id++;
 			}

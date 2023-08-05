@@ -23,5 +23,14 @@
             int pontos = (vitorias * 2) + empates + (golsFeitos - golsTomados);
             return pontos;
         }
+
+        public void ResetarPontuacao()
+        {
+            vitorias = 0;
+            derrotas = 0;
+            empates = 0;
+            golsFeitos = 0;
+            golsTomados = 0;
+        }
     }
 }

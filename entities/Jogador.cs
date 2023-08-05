@@ -20,13 +20,12 @@ namespace TXTSoccer.entities
         public Jogador(
             int id, string nome,
             string apelido, Posicao posicao, int numero,
-            int qualidade, int cartoes, DateOnly dataNascimento
+            int qualidade, DateOnly dataNascimento
             )
         {
             Id = id;
             Nome = nome;
             Numero = numero;
-            Cartoes = cartoes;
             Apelido = apelido;
             Posicao = posicao;
             Qualidade = qualidade;
@@ -57,7 +56,7 @@ namespace TXTSoccer.entities
                 Cartoes = 0;
                 Suspenso = false;
             }
-            else JogosSuspenso -= 1;
+            else JogosSuspenso --;
         }
 
         public void SofrerLesao()
