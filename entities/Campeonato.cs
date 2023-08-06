@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TXTSoccer.helpers;
+﻿using TXTSoccer.helpers;
 
 
 namespace TXTSoccer.entities
@@ -11,10 +9,10 @@ namespace TXTSoccer.entities
 	internal class Campeonato
 	{
 		public string Name { get; set; }
-		public int Temporadas { get; set; } = 3;
-        public int TemporadaAtual { get; set; } = 1;
         public int Rodadas { get; set; }
-		public int RodadaAtual { get; set; } = 1;
+        public int RodadaAtual { get; set; } = 1;
+        public int Temporadas { get; set; } = 3;
+        public int TemporadaAtual { get; set; } = 1;
 		public List<Serie> Series { get; set; } = new();
 
 		public Campeonato(string name, int rodadas)
@@ -24,20 +22,14 @@ namespace TXTSoccer.entities
 		}
 
 		/// <summary>
-		/// Determina os jogos da rodada atual de cada <see cref="Serie"/>. <br/>
-		/// </summary>
-		public void DefinirJogosRodada()
-		{
-			Series.ForEach(s => s.DefinirJogosRodada());
-		}
-
-		/// <summary>
 		/// Inicia dos <see cref="Jogo">jogos</see> da rodada atual.<br/>
 		/// Imprime os jogos de todas as séries na rodada atual do campeonato.
 		/// </summary>
 		public void IniciarRodada()
 		{
-			Series.ForEach(s => s.IniciarRodada());
+            Series.ForEach(s => s.DefinirJogosRodada());
+            Series.ForEach(s => s.IniciarRodada());
+
 			List<string> options = new(){ "Ir para a tabela", "Ver jogos" };
 
 			do
@@ -55,6 +47,10 @@ namespace TXTSoccer.entities
 			RodadaAtual++;
 		}
 
+		/// <summary>
+		/// Promove e rebaixa os times entre as séries
+		/// Imprime os times promovidos e rebaixados
+		/// </summary>
 		public void TerminarTemporada()
 		{
 			List<List<TimeParticipante>> RebaixadosCampeonato = new();
@@ -69,34 +65,31 @@ namespace TXTSoccer.entities
 			for (int i = 0; i < Series.Count; i++)
 			{
                 Series[i].Times.Sort((x, y) => y.GetPontuacao().CompareTo(x.GetPontuacao()));
-                int nTimes = Series[i].Times.Count - 1;
+				List<TimeParticipante> times = Series[i].Times;
+                int nTimes = times.Count - 1;
 
                 if (i != Series.IndexOf(Series.Last()))
 				{
 					List<TimeParticipante> RebaixadosSerie = new();
 
-					RebaixadosSerie.AddRange(Series[i].Times.GetRange(nTimes - 3, 3));
+					RebaixadosSerie.AddRange(times.GetRange(nTimes - 2, 3));
 					RebaixadosCampeonato.Add(RebaixadosSerie);
-                    Series[i].Times.RemoveRange(nTimes - 4, 3);
+                    times.RemoveRange(nTimes - 4, 3);
 
 					RebaixadosSerie.ForEach(t =>
-					{
-						Console.WriteLine($"{t.Time.Nome} foi rebaixado da serie {Series[i].Name}");
-					});
+						Console.WriteLine($"REBAIXADO DA SERIE {Series[i].Name} - {t.Time.Nome}"));
 				}
 
 				if (i != 0)
 				{
 					List<TimeParticipante> PromovidosSerie = new();
 
-					PromovidosSerie.AddRange(Series[i].Times.GetRange(0, 3));
+					PromovidosSerie.AddRange(times.GetRange(0, 3));
 					PromovidosCampeonato.Add(PromovidosSerie);
-                    Series[i].Times.RemoveRange(0, 3);
+                    times.RemoveRange(0, 3);
 
                     PromovidosSerie.ForEach(t =>
-                    {
-                        Console.WriteLine($"{t.Time.Nome} foi promovido da serie {Series[i].Name}");
-                    });
+						Console.WriteLine($"PROMOVIDO DA SERIE {Series[i].Name} - {t.Time.Nome}"));
                 }
 
 			}
@@ -131,7 +124,7 @@ namespace TXTSoccer.entities
             }
 
 			Series = NovasSeries;
-			Temporadas++;
+			TemporadaAtual++;
 			RodadaAtual = 1;
         }
 	}

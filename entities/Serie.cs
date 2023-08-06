@@ -28,7 +28,7 @@ namespace TXTSoccer.entities
 			Times.ForEach(t =>
 			{
 				if (Times.IndexOf(t) != 0 && Times.IndexOf(t) % 2 != 0)
-					JogosRodada.Add(new Jogo(t.Time, Times[Times.IndexOf(t) - 1].Time));
+					JogosRodada.Add(new Jogo(t, Times[Times.IndexOf(t) - 1]));
 			});
 		}
 
@@ -37,11 +37,7 @@ namespace TXTSoccer.entities
 		/// </summary>
 		public void IniciarRodada()
 		{
-			JogosRodada.ForEach(j =>
-			{
-				j.IniciarJogo();
-				ContabilizarResuiltadoJogo(j);
-			});
+			JogosRodada.ForEach(j => j.IniciarJogo());
 
 			// Pos-rodada
 			Times.ForEach(t =>
@@ -52,40 +48,6 @@ namespace TXTSoccer.entities
 					j.CumprirSuspensao();
 				});
 			});
-		}
-
-		/// <summary>
-		/// Contabiliza as pontuações pós-jogo.<br/>
-		/// </summary>
-		/// <param name="j">Jogo da rodada atual a ser contabilizado</param>
-		private void ContabilizarResuiltadoJogo(Jogo j)
-		{
-			TimeParticipante? mandante = Times.Find(t => t.Time == j.Mandante);
-			TimeParticipante? visitante = Times.Find(t => t.Time == j.Visitante);
-
-			if (mandante is null || visitante is null) return;
-
-			if (j.PlacarMandante > j.PlacarVisitante)
-			{
-				mandante.vitorias++;
-				visitante.derrotas++;
-			}
-			else if (j.PlacarMandante < j.PlacarVisitante)
-			{
-				mandante.derrotas++;
-				visitante.vitorias++;
-			}
-			else
-			{
-				mandante.empates++;
-				visitante.empates++;
-			}
-
-			mandante.golsFeitos += j.PlacarMandante;
-			mandante.golsTomados += j.PlacarVisitante;
-
-			visitante.golsFeitos += j.PlacarVisitante;
-			visitante.golsTomados += j.PlacarMandante;
 		}
 
 		public void ResetarPontuacoes() 
@@ -149,8 +111,8 @@ namespace TXTSoccer.entities
                 do
 				{
 					Console.WriteLine($"--------------------- {Name}");
-					HelperPrinter.ImprimirJogadores(j.Mandante.Nome, j.EscalacaoMandante);
-					HelperPrinter.ImprimirJogadores(j.Visitante.Nome, j.EscalacaoVisitante);
+					HelperPrinter.ImprimirJogadores(j.Mandante.Time.Nome, j.EscalacaoMandante);
+					HelperPrinter.ImprimirJogadores(j.Visitante.Time.Nome, j.EscalacaoVisitante);
 
                     SelectInput.instance = Select.Instance.GetChoice(options, SelectInput.Instance);
 

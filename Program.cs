@@ -38,11 +38,7 @@ namespace TXTSoccer
 			while (c.TemporadaAtual <= c.Temporadas)
 			{
                 while (c.RodadaAtual <= c.Rodadas)
-                {
-                    c.DefinirJogosRodada();
                     c.IniciarRodada();
-                }
-
 				c.TerminarTemporada();
             }
 		}

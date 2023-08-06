@@ -6,23 +6,23 @@
     /// </summary>
     internal class Jogo
     {
-        public Time Mandante { get; }
-        public Time Visitante { get; }
+        public TimeParticipante Mandante { get; }
+        public TimeParticipante Visitante { get; }
         public int PlacarMandante { get; set; }
         public int PlacarVisitante { get; set; }
 
         public List<Jogador> EscalacaoMandante { get; }
         public List<Jogador> EscalacaoVisitante { get; }
 
-        public Jogo(Time mandante, Time visitante)
+        public Jogo(TimeParticipante mandante, TimeParticipante visitante)
         {
             Mandante = mandante;
             Visitante = visitante;
             PlacarMandante = 0;
             PlacarVisitante = 0;
 
-            EscalacaoMandante = mandante.EscalarJogadores();
-            EscalacaoVisitante = visitante.EscalarJogadores();
+            EscalacaoMandante = mandante.Time.EscalarJogadores();
+            EscalacaoVisitante = visitante.Time.EscalarJogadores();
         }
 
         public void IniciarJogo()
@@ -70,8 +70,8 @@
 
         private void PermitirTreinamento()
         {
-            Mandante.Plantel.ForEach(j => j.JaTreinou = false);
-            Visitante.Plantel.ForEach(j => j.JaTreinou = false);
+            Mandante.Time.Plantel.ForEach(j => j.JaTreinou = false);
+            Visitante.Time.Plantel.ForEach(j => j.JaTreinou = false);
         }
 
         /*
@@ -110,6 +110,34 @@
 
                 return somatorioQualidades;
             }
+
+            ContabilizarJogo();
+        }
+
+
+        private void ContabilizarJogo()
+        {
+            if (PlacarMandante > PlacarVisitante)
+            {
+                Mandante.vitorias++;
+                Visitante.derrotas++;
+            }
+            else if (PlacarMandante < PlacarVisitante)
+            {
+                Mandante.derrotas++;
+                Visitante.vitorias++;
+            }
+            else
+            {
+                Mandante.empates++;
+                Visitante.empates++;
+            }
+
+            Mandante.golsFeitos += PlacarMandante;
+            Mandante.golsTomados += PlacarVisitante;
+
+            Visitante.golsFeitos += PlacarVisitante;
+            Visitante.golsTomados += PlacarMandante;
         }
     }
 }

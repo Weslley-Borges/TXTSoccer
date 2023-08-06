@@ -87,7 +87,13 @@ namespace TXTSoccer.helpers
 
 			Table tbl = new("Time Mandante", "Gols", "X", "Gols", "Time Visitante");
 
-			s.JogosRodada.ForEach(j => tbl.AddRow(j.Mandante.Nome, j.PlacarMandante, "X", j.PlacarVisitante, j.Visitante.Nome));
+            s.JogosRodada.ForEach(j => tbl.AddRow(
+				j.Mandante.Time.Nome, 
+				j.PlacarMandante, 
+				"X", 
+				j.PlacarVisitante, 
+				j.Visitante.Time.Nome));
+
 			tbl.Print();
 		}
 
